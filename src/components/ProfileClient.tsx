@@ -1,28 +1,35 @@
-"use client"; // ✅ 這是 Client Component
+"use client";
 
 import { useEffect, useState } from "react";
-import { initLiff, getProfile } from "../utils/liff";
+import { initLiff, getProfile } from "@/utils/liff";
+
+// ✅ 定義 Profile 型別
+interface UserProfile {
+  userId: string;
+  displayName: string;
+  pictureUrl?: string; // ✅ 允許 `undefined`
+}
 
 export default function ProfileClient() {
-  const [profile, setProfile] = useState<any>(null);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchProfile() {
-      await initLiff(); // ✅ 先初始化 LIFF
+      await initLiff();
       const userProfile = await getProfile();
 
       if (userProfile) {
         setProfile(userProfile);
       }
-      setLoading(false); // ✅ 避免畫面閃爍
+      setLoading(false);
     }
 
     fetchProfile();
   }, []);
 
   if (loading) {
-    return <p>載入中...</p>; // ✅ 讓畫面不會突然閃爍
+    return <p>載入中...</p>;
   }
 
   return (
